@@ -11,6 +11,6 @@ next_build_identifier=$(next-build-identifier.sh)
 echo "$next_build_identifier" > $( cd "$DIR/.." && pwd )/VERSION
 git add VERSION
 git commit -m "Bumping build identifier to \"$next_build_identifier\""
-git tag $next_build_identifier
+git tag $next_build_identifier -a -m "Annotating build identifier \"$next_build_identifier\""
 git push --tags
 git push origin
