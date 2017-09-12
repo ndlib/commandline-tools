@@ -1,9 +1,11 @@
 #!/bin/bash
+# Description: Assists with common dev tasks for the hyrax project.
 # Usage: hyrax.services command [hyrax path]
 # Examples:
 #   hyrax.services start /path/to/hyrax
 #   hyrax.services stop
 #   hyrax.services clean /path/to/hyrax
+#
 # Output will be redirected to *.screen.log. For example, to watch the output from hyrax:
 #   tail -f hyrax.screen.log
 CMD=$1
