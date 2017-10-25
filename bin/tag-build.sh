@@ -12,12 +12,12 @@ if [ -n "$clean_repo" ]; then
 fi
 
 # Determine the root directory for this git repository
-DIR="$( cd "$(git rev-parse --show-toplevel)" && pwd )"
+DIR=$(git rev-parse --show-toplevel)
 next_build_identifier=$(next-build-identifier.sh)
 
 # Write the next build identifier to the VERSION file
 echo "$next_build_identifier" > $DIR/VERSION
-git add VERSION
+git add $DIR/VERSION
 git commit -m "Bumping build identifier to \"$next_build_identifier\""
 git tag $next_build_identifier -a -m "Annotating build identifier \"$next_build_identifier\""
 git push --tags
