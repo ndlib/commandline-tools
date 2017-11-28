@@ -34,10 +34,10 @@ OPTIND=1         # Reset in case getopts has been used previously in the shell.
 output_file=""
 verbose=0
 
-while getopts "h:" opt; do
+while getopts ":h" opt; do
     case "$opt" in
     h|\?)
-        echo ""
+        show_help
         exit 0
         ;;
     esac
