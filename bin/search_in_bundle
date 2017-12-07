@@ -1,0 +1,60 @@
+show_help() {
+  cat << EOF
+  Search your application code and code in your bundles.
+
+  Using the result of "bundle show --paths" send that through "ag", an
+  ack replacement but faster (which is friendly than grep).
+
+  For downstream parameters, run "ag -h"
+
+  Usage: search_in_bundle [-xhg] [pattern] [optional parameters for search]
+
+  Options:
+    -h    Display this help and exit
+    -x    Exclude current directory (limiting search only to bundle)
+    -g    Use grep instead of ag
+EOF
+}
+# A POSIX variable
+OPTIND=1         # Reset in case getopts has been used previously in the shell.
+
+# Initialize our own variables:
+exclude_current_directory=0
+use_grep=0
+
+while getopts ":hxg" opt; do
+    case "$opt" in
+    h|\? )
+        show_help
+        exit 0
+        ;;
+    x )
+        exclude_current_directory=1
+        ;;
+    g )
+        use_grep=1
+        ;;
+    esac
+done
+shift $((OPTIND -1))
+
+if [ $use_grep -eq 0 ]
+then
+  if [ $exclude_current_directory -eq 1 ]
+  then
+    # Excluding application path
+    ag "$@" `bundle show --paths`
+  else
+    # Including application path
+    ag "$@" `bundle show --paths` .
+  fi
+else
+  if [ $exclude_current_directory -eq 1 ]
+  then
+    # Excluding application path
+    grep -R "$@" `bundle show --paths`
+  else
+    # Including application path
+    grep -R "$@" `bundle show --paths` .
+  fi
+fi
