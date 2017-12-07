@@ -1,3 +1,5 @@
+#!/usr/bin/env sh
+
 show_help() {
   cat << EOF
   Search your application code and code in your bundles.
