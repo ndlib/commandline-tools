@@ -9,5 +9,7 @@ current_year=$(date "+%Y")
 # incremented by one. If there is no build number for the current year, use a
 # build number of "1". This is ugly because we need to shell expand current_year,
 # but not the awk argument $2.
-git tag | awk -F '.' "/^v$current_year/ {if (max < \$2) {max = \$2}} END {print \"v$current_year.\"max+1}"
+git ls-remote --tags origin | \
+  awk -F '/' "/.*v$current_year.[0-9]+\$/ { print \$3 }" | \
+  awk -F '.' "/^v$current_year/ {if (max < \$2) {max = \$2}} END {print \"v$current_year.\"max+1}"
 exit 0
