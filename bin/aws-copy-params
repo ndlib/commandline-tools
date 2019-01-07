@@ -15,8 +15,8 @@ parser.add_argument('-p','--source-path', help='The source path to copy all para
 parser.add_argument('-l','--source-region', help='The source region to copy all parameters from.', required=True)
 parser.add_argument('-P','--dest-path', help='The destination path to copy all parameters to.', required=True)
 parser.add_argument('-L','--dest-region', help='The destination region to copy all parameters to.', required=True)
-parser.add_argument('-o','--overwrite', help='Force overwrite of existing parameters.', required=False, default=True)
-parser.add_argument('-r','--recursive', help='Recursively copy parameters if there are subtrees.', required=False, default=False)
+parser.add_argument('-o','--overwrite', help='Force overwrite of existing parameters.', required=False, default=False, action='store_true')
+parser.add_argument('-r','--recursive', help='Recursively copy parameters if there are subtrees.', required=False, default=False, action='store_true')
 args = parser.parse_args()
 
 # Echo feedback about what's about to happen
