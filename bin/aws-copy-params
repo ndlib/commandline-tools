@@ -1,0 +1,52 @@
+#!/usr/bin/env python
+
+import boto3
+import pprint
+import re
+import argparse
+
+# Constants
+perPage = 10
+withDecryption = True
+
+parser = argparse.ArgumentParser(description='Copies SSM parameters from one path to another. Can currently copy between regions, but not accounts.',
+    epilog='This script is part of the https://github.com/ndlib/commandline-tools project.')
+parser.add_argument('-p','--source-path', help='The source path to copy all parameters from.', required=True)
+parser.add_argument('-l','--source-region', help='The source region to copy all parameters from.', required=True)
+parser.add_argument('-P','--dest-path', help='The destination path to copy all parameters to.', required=True)
+parser.add_argument('-L','--dest-region', help='The destination region to copy all parameters to.', required=True)
+parser.add_argument('-o','--overwrite', help='Force overwrite of existing parameters.', required=False, default=False, action='store_true')
+parser.add_argument('-r','--recursive', help='Recursively copy parameters if there are subtrees.', required=False, default=False, action='store_true')
+args = parser.parse_args()
+
+# Echo feedback about what's about to happen
+print "Copying params from %s in the %s region to %s in the %s region." % (args.source_path, args.source_region, args.dest_path, args.dest_region)
+srcClient = boto3.client('ssm', args.source_region)
+destClient = boto3.client('ssm', args.dest_region)
+getParams = {
+    'Path': args.source_path,
+    'Recursive': args.recursive,
+    'WithDecryption': withDecryption,
+    'MaxResults': perPage
+}
+nextToken = None
+while nextToken is not 'EOF':
+    if nextToken is not None:
+        getParams.update({ 'NextToken': nextToken })
+    srcResponse = srcClient.get_parameters_by_path(**getParams)
+    # Default to EOF in order to break the loop when the response has no NextToken
+    nextToken = srcResponse.get('NextToken', 'EOF')
+
+    for param in srcResponse.get('Parameters'):
+        newName = re.sub(
+                   r"^%s" % args.source_path,
+                   args.dest_path,
+                   param.get('Name')
+               )
+        print param.get('Name') + " -> " + newName
+        destResponse = destClient.put_parameter(
+            Name=newName,
+            Value=param.get('Value'),
+            Type=param.get('Type'),
+            Overwrite=args.overwrite
+        )

@@ -20,3 +20,4 @@ Or clone the repository and include the `./bin/` in your `$PATH`.
 * [next-build-identifier.sh](./bin/next-build-identifier.sh) - determine the next build identifier. This is an idempotent script.
 * [build-pull-request-message](./bin/build-pull-request-message) - leverage your commit messages to build your pull request message.
 * [search_in_bundle](./bin/search_in_bundle) - search (via ag or grep) your current directory and associated bundle path
+* [aws-copy-params](./bin/aws-copy-params) - Copies SSM parameters from one path to another. Can currently copy between regions, but not accounts.
