@@ -37,7 +37,7 @@
 get_pulls()
 {
   git fetch
-  git log origin/master --merges --oneline $start..$end | # Get the merges for the time frame, ex: 943ef1f Merge pull request #134 from ndlib/AIMS-263-Remove-item-from-bin
+  git log --merges --oneline $start..$end | # Get the merges for the time frame, ex: 943ef1f Merge pull request #134 from ndlib/AIMS-263-Remove-item-from-bin
     grep "Merge pull request" | # Filter to just pull request merges
     awk '{ printf "%s,%s\n", $5, $7 }' | # Extract the pull id and branch, ex: #134,ndlib/AIMS-263-Remove-item-from-bin
     sed 's/#//g' # Remove the # from the pull id
